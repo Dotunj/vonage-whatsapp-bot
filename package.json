@@ -1,0 +1,20 @@
+{
+  "name": "nexmo-whatsapp-bot",
+  "version": "1.0.0",
+  "description": "A WhatsApp Bot for performing currency conversions",
+  "main": "index.js",
+  "dependencies": {
+    "axios": "^0.19.2",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "author": "Dotun J",
+  "license": "ISC"
+}

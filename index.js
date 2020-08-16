@@ -1,4 +1,4 @@
-require('dotenv').config();
+require("dotenv").config();
 const express = require("express");
 const app = express();
 const port = 3000;
@@ -24,10 +24,12 @@ async function performCurrencyConversion(body) {
   const toNumber = body.from.number;
   const message = body.message.content.text;
   const wordCount = message.split(" ");
-  const wordCountLength = wordCount.length
+  const wordCountLength = wordCount.length;
   if (wordCountLength < 2 || wordCountLength < 5) {
     const message = standardResponse();
-    return sendWhatsAppMessage(message, toNumber).catch((err) => console.log(err));
+    return sendWhatsAppMessage(message, toNumber).catch((err) =>
+      console.log(err)
+    );
   }
   const units = wordCount[1];
   const baseCurrency = wordCount[2].toUpperCase();
@@ -37,13 +39,16 @@ async function performCurrencyConversion(body) {
     toCurrency
   );
   if (!isSupportedCurrencyCodes)
-    return sendWhatsAppMessage("Please provide a valid currency code", toNumber);
+    return sendWhatsAppMessage(
+      "Please provide a valid currency code",
+      toNumber
+    ).catch((err) => console.log(err));
   const baseRate = await getBaseExchangeRate(baseCurrency, toCurrency);
   const convertedAmount = Number(units) * Number(baseRate);
   return sendWhatsAppMessage(
     `${units} ${baseCurrency} is ${convertedAmount} ${baseCurrency}`,
     toNumber
-  );
+  ).catch((err) => console.log(err));
 }
 
 async function sendWhatsAppMessage(message, toNumber) {
@@ -57,14 +62,14 @@ async function sendWhatsAppMessage(message, toNumber) {
           content: {
             type: "text",
             text: message,
-          }
+          },
         },
       },
       {
         auth: {
           username: process.env.NEXMO_API_KEY,
-          password: process.env.NEXMO_API_SECRET
-        }
+          password: process.env.NEXMO_API_SECRET,
+        },
       }
     );
     return response;

@@ -11,7 +11,6 @@ app.use(express.json());
 app.use(express.urlencoded());
 
 app.post("/webhooks/inbound-message", (req, res) => {
-  console.log("received webhook");
   eventEmitter.emit("inbound-message", req.body);
   return res.send("Received Webhook successfully");
 });
@@ -25,7 +24,7 @@ async function performCurrencyConversion(body) {
   const message = body.message.content.text;
   const wordCount = message.split(" ");
   const wordCountLength = wordCount.length;
-  if (wordCountLength < 2 || wordCountLength < 5) {
+  if (wordCountLength < 5) {
     const message = standardResponse();
     return sendWhatsAppMessage(message, toNumber).catch((err) =>
       console.log(err)
@@ -44,38 +43,11 @@ async function performCurrencyConversion(body) {
       toNumber
     ).catch((err) => console.log(err));
   const baseRate = await getBaseExchangeRate(baseCurrency, toCurrency);
-  const convertedAmount = Number(units) * Number(baseRate);
+  const convertedAmount = twoDecimalPlaces(Number(units) * Number(baseRate));
   return sendWhatsAppMessage(
-    `${units} ${baseCurrency} is ${convertedAmount} ${baseCurrency}`,
+    `${units} ${baseCurrency} is ${convertedAmount} ${toCurrency}`,
     toNumber
   ).catch((err) => console.log(err));
-}
-
-async function sendWhatsAppMessage(message, toNumber) {
-  try {
-    const response = axios.post(
-      "https://messages-sandbox.nexmo.com/v0.1/messages",
-      {
-        from: { type: "whatsapp", number: process.env.NEXMO_FROM_NUMBER },
-        to: { type: "whatsapp", number: toNumber },
-        message: {
-          content: {
-            type: "text",
-            text: message,
-          },
-        },
-      },
-      {
-        auth: {
-          username: process.env.NEXMO_API_KEY,
-          password: process.env.NEXMO_API_SECRET,
-        },
-      }
-    );
-    return response;
-  } catch (error) {
-    console.error(error);
-  }
 }
 
 function standardResponse() {
@@ -114,6 +86,37 @@ async function getBaseExchangeRate(baseCurrency, toCurrency) {
   }
 }
 
-app.listen(port, async () => {
+async function sendWhatsAppMessage(message, toNumber) {
+  try {
+    const response = axios.post(
+      "https://messages-sandbox.nexmo.com/v0.1/messages",
+      {
+        from: { type: "whatsapp", number: process.env.VONAGE_FROM_NUMBER },
+        to: { type: "whatsapp", number: toNumber },
+        message: {
+          content: {
+            type: "text",
+            text: message,
+          },
+        },
+      },
+      {
+        auth: {
+          username: process.env.VONAGE_API_KEY,
+          password: process.env.VONAGE_API_SECRET,
+        },
+      }
+    );
+    return response;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+function twoDecimalPlaces(value) {
+  return Math.round(value * 100) / 100;
+}
+
+app.listen(port, () => {
   console.log(`Now listening on port: ${port}`);
 });

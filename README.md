@@ -14,10 +14,10 @@ Node, Express, Vonage, WhatsApp
 
 1. Using the Messages Sandbox, configure the sandbox URL for Inbound Messages to point to the URL `[APP URL]/webhooks/inbound-message`.
   - Your application must be publicly available. If running locally, you might find the [guide to using Ngrok for development](https://developer.nexmo.com/tools/ngrok) helpful.
-3. Clone this repo, and run `npm install`
-4. Copy the `.env.example` file to `.env`
-5. Add your configuration values to the `.env` file, this will include your Nexmo credentials.
-6. Run `npm start` in your terminal
+2. Clone this repo, and run `npm install`
+3. Copy the `.env.example` file to `.env`
+4. Add your configuration values to the `.env` file, this will include your Nexmo credentials.
+5. Run `npm start` in your terminal
 
 ## Further Reading
 

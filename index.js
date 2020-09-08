@@ -19,6 +19,15 @@ eventEmitter.on("inbound-message", (body) => {
   performCurrencyConversion(body).catch((err) => console.log(err));
 });
 
+function standardResponse() {
+  let response = "Welcome to the WhatsApp Bot For Currency Conversion \n";
+  response += "Please use the following format to chat with the Bot \n";
+  response += "Convert 5 USD to CAD \n";
+  response +=
+    "Where 5 is the number of units to convert, USD is the base currency and CAD is the currency you would like to convert to.";
+  return response;
+}
+
 async function performCurrencyConversion(body) {
   const toNumber = body.from.number;
   const message = body.message.content.text;
@@ -50,14 +59,6 @@ async function performCurrencyConversion(body) {
   ).catch((err) => console.log(err));
 }
 
-function standardResponse() {
-  let response = "Welcome to the WhatsApp Bot For Currency Conversion \n";
-  response += "Please use the following format to chat with the Bot \n";
-  response += "Convert 5 USD to CAD \n";
-  response +=
-    "Where 5 is the number of units to convert, USD is the base currency and CAD is the currency you would like to convert to.";
-  return response;
-}
 
 async function getCurrencyCode(baseCurrency, toCurrency) {
   try {
